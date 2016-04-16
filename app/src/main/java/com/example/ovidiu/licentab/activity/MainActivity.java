@@ -1,5 +1,8 @@
-package com.example.ovidiu.licentab;
+package com.example.ovidiu.licentab.activity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +16,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.ovidiu.licentab.R;
+import com.example.ovidiu.licentab.service.ScheduledService;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -46,6 +51,9 @@ public class MainActivity extends ActionBarActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        Context context = MainActivity.this;
+        Intent i= new Intent(context, ScheduledService.class);
+        context.startService(i);
     }
 
     @Override
@@ -71,7 +79,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void login(View view) {
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        ///Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         Context context = MainActivity.this;
 //       SharedPreferences.Editor editor = context.getSharedPreferences("Mata", Context.MODE_PRIVATE).edit();
 //      editor.putString("status", "1");
@@ -83,14 +91,46 @@ public class MainActivity extends ActionBarActivity {
         EditText editText = (EditText) findViewById(R.id.editText);
         EditText editText2 = (EditText) findViewById(R.id.editText2);
         TextView textView = (TextView) findViewById(R.id.textView7);
-        if(editText.getText().toString().equals(null))
-            textView.setText("Completati Nume");
-        if(editText2.getText().toString().equals(null))
-            textView.setText("Completati Parola");
-        new GetDataUser().execute();
-        startActivity(intent);
+        if(editText.getText().toString().equals("") || editText2.getText().toString().equals(""))
+            textView.setText("Completati Nume sau Parola");
+        if(!(editText.getText().toString().equals("") && editText2.getText().toString().equals(""))) {
+            new GetDataUser().execute();
+            //startActivity(intent);
+        }
 
     }
+    public void alertNot(View view){ // trebuie pus View view intotdeauna altfel nu merge
+
+//        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+//        //mBuilder.setSmallIcon(R.drawable.notification_icon);
+//        mBuilder.setContentTitle("Notification Alert, Click Me!");
+//        mBuilder.setContentText("Hi, This is Android Notification Detail!");
+//        //NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        Intent resultIntent = new Intent(this, MainActivity.class);
+//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+//        stackBuilder.addParentStack(MainActivity.class);
+//
+//// Adds the Intent that starts the Activity to the top of the stack
+//        stackBuilder.addNextIntent(resultIntent);
+//        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+//        mBuilder.setContentIntent(resultPendingIntent);
+//        // notificationID allows you to update the notification later on.
+//        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//// notificationID allows you to update the notification later on.
+//        mNotificationManager.notify(9999, mBuilder.build());
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        @SuppressWarnings("deprecation")
+
+        Notification notification = new Notification(R.drawable.abc_ab_share_pack_holo_light,"New Message", System.currentTimeMillis());
+        Intent notificationIntent = new Intent(this,MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,notificationIntent, 0);
+
+        notification.setLatestEventInfo(MainActivity.this, "Prima","Notificvasrer", pendingIntent);
+        notificationManager.notify(9999, notification);
+
+    }
+
 
     @Override
     public void onStart() {
@@ -132,7 +172,7 @@ public class MainActivity extends ActionBarActivity {
         client.disconnect();
     }
 
-    public class GetData extends AsyncTask<Void, Void, Void> {
+    public  class GetData extends AsyncTask<Void, Void, Void> {
 
         String id = "";
         String id2 = "a";
@@ -193,6 +233,7 @@ public class MainActivity extends ActionBarActivity {
         EditText editText2;
         String username;
         String password;
+        String fg;
         @Override
         public String doInBackground(String... data) {
 
@@ -225,16 +266,19 @@ public class MainActivity extends ActionBarActivity {
 
 //start listening to the stream
                 Scanner inStream = new Scanner(conn.getInputStream());
-                String fg = inStream.nextLine();
+                fg = inStream.nextLine();
                 if(fg.equals("true")) {
-                    SharedPreferences sharedpreferences = getSharedPreferences("Mama", Context.MODE_PRIVATE);
+                    SharedPreferences sharedpreferences = getSharedPreferences("User", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
-                    String channel = (sharedpreferences.getString("Nume", null));
-                    String boss = "tacto";
-                }
-                else if (fg.equals("false")){
+                    editor.putString("Nume",username);
+                    editor.commit();
+//                    String channel = (sharedpreferences.getString("Nume", null));
+//                    String boss = "tacto";
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
 
                 }
+
 //Create JSONObject here
             } catch (Exception e) {
                 e.printStackTrace();
@@ -250,7 +294,10 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(String unused) {
-
+            if (fg.equals("false")){
+                TextView textView = (TextView) findViewById(R.id.textView8);
+                textView.setText("Username sau parola incorecte");
+            }
 
         }
         @Override
