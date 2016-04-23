@@ -51,9 +51,9 @@ public class MainActivity extends ActionBarActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-        Context context = MainActivity.this;
-        Intent i= new Intent(context, ScheduledService.class);
-        context.startService(i);
+//        Context context = MainActivity.this;
+//        Intent i= new Intent(context, ScheduledService.class);
+//        context.startService(i);
     }
 
     @Override
