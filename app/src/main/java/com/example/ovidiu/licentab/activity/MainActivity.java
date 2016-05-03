@@ -3,13 +3,17 @@ package com.example.ovidiu.licentab.activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.ovidiu.licentab.R;
+import com.example.ovidiu.licentab.service.HelloService;
 import com.example.ovidiu.licentab.service.ScheduledService;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -36,24 +41,37 @@ import java.util.Scanner;
 
 public class MainActivity extends ActionBarActivity {
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+
     SharedPreferences sharedpreferences;
     private GoogleApiClient client;
+    ScheduledService mService;
+    boolean mBound = false;
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            ScheduledService.LocalBinder binder = (ScheduledService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new GetData().execute();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-//        Context context = MainActivity.this;
-//        Intent i= new Intent(context, ScheduledService.class);
-//        context.startService(i);
+        Intent intent = new Intent(this, ScheduledService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        Log.d("aici", "aici");
     }
 
     @Override
@@ -99,6 +117,7 @@ public class MainActivity extends ActionBarActivity {
         }
 
     }
+
     public void alertNot(View view){ // trebuie pus View view intotdeauna altfel nu merge
 
 //        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
@@ -119,17 +138,26 @@ public class MainActivity extends ActionBarActivity {
 //
 //// notificationID allows you to update the notification later on.
 //        mNotificationManager.notify(9999, mBuilder.build());
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        @SuppressWarnings("deprecation")
 
-        Notification notification = new Notification(R.drawable.abc_ab_share_pack_holo_light,"New Message", System.currentTimeMillis());
-        Intent notificationIntent = new Intent(this,MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,notificationIntent, 0);
 
-        notification.setLatestEventInfo(MainActivity.this, "Prima","Notificvasrer", pendingIntent);
-        notificationManager.notify(9999, notification);
+        // parte notificare merge
 
+
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        @SuppressWarnings("deprecation")
+//
+//        Notification notification = new Notification(R.drawable.abc_ab_share_pack_holo_light,"New Message", System.currentTimeMillis());
+//        Intent notificationIntent = new Intent(this,MainActivity.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,notificationIntent, 0);
+//
+//        notification.setLatestEventInfo(MainActivity.this, "Prima","Notificvasrer", pendingIntent);
+//        notificationManager.notify(9999, notification);
+        TextView textView = (TextView) findViewById(R.id.textView);
+        mService.getData(textView);
     }
+
+
+
 
 
     @Override
@@ -150,6 +178,8 @@ public class MainActivity extends ActionBarActivity {
                 Uri.parse("android-app://com.example.ovidiu.licentab/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
+      //  startService(new Intent(getBaseContext(), ScheduledService.class));
+        Log.d("aici", "aici");
     }
 
     @Override
@@ -169,6 +199,10 @@ public class MainActivity extends ActionBarActivity {
                 Uri.parse("android-app://com.example.ovidiu.licentab/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
         client.disconnect();
     }
 
@@ -215,8 +249,6 @@ public class MainActivity extends ActionBarActivity {
             return null;
 
         }
-
-
 
         @Override
         protected void onPostExecute(Void unused) {

@@ -31,8 +31,12 @@
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <service
-            android:name="service.ScheduledService"
+            android:name=".service.ScheduledService"
+           />
+        <service android:name=".service.HelloService"
             android:exported="false"/>
+        <!--<service android:name=".service.ScheduledService.LocalBinder"-->
+            <!--android:exported="false"/>-->
         ...
         <meta-data
             android:name="com.google.android.gms.version"
