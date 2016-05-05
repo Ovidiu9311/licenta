@@ -107,10 +107,11 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="StartActivity"
         android:id="@+id/button4"
         android:layout_alignTop="@+id/imageButton"
-        android:layout_toEndOf="@+id/editText2" />
+        android:layout_toEndOf="@+id/editText2"
+        android:onClick="startActivity()" />
 
 
 </RelativeLayout>

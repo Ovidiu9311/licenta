@@ -96,6 +96,12 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void startActivity(View view) {
+        Intent intent = new Intent(MainActivity.this, ServiceActivity.class);
+        startActivity(intent);
+    }
+
+
     public void login(View view) {
         ///Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         Context context = MainActivity.this;
