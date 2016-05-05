@@ -47,16 +47,18 @@ public class ScheduledService extends Service
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                Log.i("IAUDATE", "IAUDATE");
-                GetData data = (GetData) new GetData().execute();
-                try {
-                    String rezultat = data.get();
-                    textView2.setText(rezultat);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+//                Log.i("IAUDATE", "IAUDATE");
+//                //nu mai fac request decomdata
+//               GetData data = (GetData) new GetData().execute();
+//                try {
+//                   String rezultat = data.get();
+//                   textView2.setText(rezultat);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+           //}
+            textView2.setText("dfd");
             }
         }, 0, 1 * 30 * 1000);//30 secunde
     }
