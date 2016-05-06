@@ -1,6 +1,5 @@
 package com.example.ovidiu.licentab.service;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -9,13 +8,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ovidiu.licentab.R;
-import com.example.ovidiu.licentab.activity.MainActivity;
-import com.example.ovidiu.licentab.repository.GetData;
-
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Ovidiu on 4/16/2016.
