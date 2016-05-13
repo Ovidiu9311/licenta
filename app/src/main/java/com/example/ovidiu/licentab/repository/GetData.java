@@ -1,12 +1,6 @@
 package com.example.ovidiu.licentab.repository;
 
 import android.os.AsyncTask;
-import android.widget.TextView;
-
-import com.example.ovidiu.licentab.R;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -32,11 +26,12 @@ public  class GetData extends AsyncTask<Void, Void, String> {
             InputStreamReader isw = new InputStreamReader(in);
             BufferedReader bufferedReader = new BufferedReader(isw);
             String result = bufferedReader.readLine();
-            JSONArray jsonArray = new JSONArray(result);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject c = jsonArray.getJSONObject(i);
-
-                id = c.getString("temperatura");
+            id = result;
+//            JSONArray jsonArray = new JSONArray(result);
+//            for (int i = 0; i < jsonArray.length(); i++) {
+//                JSONObject c = jsonArray.getJSONObject(i);
+//
+                //id = c.getString("temperatura");
 
 //                    if(!id2.equals(id) && b) {
 //                        id2 = id;
@@ -45,7 +40,7 @@ public  class GetData extends AsyncTask<Void, Void, String> {
                // System.out.println(id);
 
 
-            }
+           // }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

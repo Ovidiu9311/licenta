@@ -7,20 +7,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.ovidiu.licentab.activity.ServiceActivity">
+    tools:context="com.example.ovidiu.licentab.activity.ServerActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView9"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="222dp"
-        android:layout_alignParentTop="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView10"
+        android:id="@+id/textView11"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
@@ -28,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start"
-        android:id="@+id/button5"
+        android:id="@+id/button6"
         android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/textView10" />
+        android:layout_toEndOf="@+id/textView11" />
 </RelativeLayout>
